@@ -29,7 +29,6 @@ public class Main {
                     }
                     break;
                 case 2:
-                    C1P2();
                     break;
                 case 3:
                     System.out.println("Exiting...");
@@ -44,11 +43,11 @@ public class Main {
 
     public static void C1P1() { //answer to challenge one was 55386
         try{
-            File myObj = new File("C1file.txt");
-            Scanner myReader = new Scanner(myObj);
+            File file = new File("C1file.txt");
+            Scanner scanner = new Scanner(file);
             Integer answer = 0;
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
+            while (scanner.hasNextLine()) {
+                String data = scanner.nextLine();
                 char num1 = '0';
                 char num2 = '0';
                 for(int i = 0; i < data.length(); i++) {
@@ -62,7 +61,7 @@ public class Main {
                 }
                 answer += Integer.valueOf(String.valueOf(num1) + String.valueOf(num2));
             }
-            myReader.close();
+            scanner.close();
             System.out.println(answer);   
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
@@ -73,13 +72,13 @@ public class Main {
     public static void C1P2() { //answer to challenge two was 54824
         try{
 
-            File myObj = new File("C1file.txt");
-            Scanner myReader = new Scanner(myObj);
+            File file = new File("C1file.txt");
+            Scanner scanner = new Scanner(file);
             Integer answer = 0;
 
-            while (myReader.hasNextLine()) {
+            while (scanner.hasNextLine()) {
 
-                String data = myReader.nextLine();
+                String data = scanner.nextLine();
                 char num1 = '0';
                 char num2 = '0';
                 Map<String,Character> numsMap = Map.of(
@@ -135,7 +134,7 @@ public class Main {
 
                 answer += Integer.valueOf(String.valueOf(num1) + String.valueOf(num2));
             }
-            myReader.close();
+            scanner.close();
             System.out.println(answer);   
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
