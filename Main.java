@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.*;
 import java.lang.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -12,7 +14,8 @@ public class Main {
             System.out.println("\nMenu:");
             System.out.println("1. C1");
             System.out.println("2. C2");
-            System.out.println("3. Exit");
+            System.out.println("3. C3");
+            System.out.println("32. Exit");
             System.out.print("Enter your choice: ");
 
             choice = scanner.nextInt();
@@ -29,19 +32,27 @@ public class Main {
                     }
                     break;
                 case 2:
+                    System.out.println("1. P1");
+                    System.out.println("2. P2");
+                    choice2 = scanner.nextInt();
+                    if(choice2 == 1) {
+                        C2P1(); 
+                    } else if (choice2 ==2) {
+                        //C2P2();
+                    }
                     break;
-                case 3:
+                case 32:
                     System.out.println("Exiting...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 3);
+        } while (choice != 32);
 
         scanner.close();
     }
 
-    public static void C1P1() { //answer to challenge one was 55386
+    public static void C1P1() { //answer to challenge one part 1 was 55386
         try{
             File file = new File("C1file.txt");
             Scanner scanner = new Scanner(file);
@@ -69,19 +80,13 @@ public class Main {
       }
     }
 
-    public static void C1P2() { //answer to challenge two was 54824
+    public static void C1P2() { //answer to challenge one part 2 was 54824
         try{
 
             File file = new File("C1file.txt");
             Scanner scanner = new Scanner(file);
             Integer answer = 0;
-
-            while (scanner.hasNextLine()) {
-
-                String data = scanner.nextLine();
-                char num1 = '0';
-                char num2 = '0';
-                Map<String,Character> numsMap = Map.of(
+            Map<String,Character> numsMap = Map.of(
                     "one", '1',
                     "two", '2',
                     "three", '3',
@@ -92,6 +97,12 @@ public class Main {
                     "eight", '8',
                     "nine", '9'
                 );
+
+            while (scanner.hasNextLine()) {
+
+                String data = scanner.nextLine();
+                char num1 = '0';
+                char num2 = '0';
                 int firstId = data.length();
                 int lastId = -1;
                 String[] firstLastSubstrings = new String[2];
@@ -133,6 +144,50 @@ public class Main {
                 }
 
                 answer += Integer.valueOf(String.valueOf(num1) + String.valueOf(num2));
+            }
+            scanner.close();
+            System.out.println(answer);   
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+      }
+    }
+
+    public static void C2P1 () { //answer to challenge 2 part 1 was 3035
+        try{
+
+            Integer answer = 0;
+            File file = new File("C2file.txt");
+            Scanner scanner = new Scanner(file);
+            Map<String, Integer> colorsMap = Map.of(
+                "red", 12,
+                "green", 13,
+                "blue", 14
+            );
+
+            while (scanner.hasNextLine()) {
+
+                String data = scanner.nextLine();
+                boolean possible = true;
+
+                for(String color : colorsMap.keySet()){
+                    Pattern pattern = Pattern.compile("(\\d+) " + color);
+                    Matcher matcher = pattern.matcher(data);
+
+                    while(matcher.find()){
+                        if (Integer.parseInt(matcher.group(1)) > colorsMap.get(color)){
+                            possible = false;
+                        }
+                    }
+                }
+
+                if(possible){
+                    Pattern pattern = Pattern.compile("Game (\\d+):");
+                    Matcher matcher = pattern.matcher(data);
+                    if(matcher.find()){
+                        answer += Integer.parseInt(matcher.group(1));
+                    }
+                }
             }
             scanner.close();
             System.out.println(answer);   
