@@ -3,6 +3,7 @@ import java.util.*;
 import java.lang.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.javatuples.*;
 
 public class Main {
 
@@ -39,6 +40,16 @@ public class Main {
                         C2P1(); 
                     } else if (choice2 ==2) {
                         C2P2();
+                    }
+                    break;
+                    case 3:
+                    System.out.println("1. P1");
+                    System.out.println("2. P2");
+                    choice2 = scanner.nextInt();
+                    if(choice2 == 1) {
+                        C3P1();  
+                    } else if (choice2 ==2) {
+                        C3P2();
                     }
                     break;
                 case 42:
@@ -230,6 +241,146 @@ public class Main {
 
             scanner.close();
             System.out.println("Your answer: " + answer);   
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+      }
+    }
+
+    public static void C3P1 () { //answer to challenge 3 part 1 was 539637
+        try{
+
+            Integer answer = 0;
+            File file = new File("C3file.txt");
+            Scanner scanner = new Scanner(file);
+            Map<Integer, String> fileMap = new HashMap<>();
+            Map<Integer, List<Integer>> symbolMap = new HashMap<>();
+            int count = 0;
+
+            while (scanner.hasNextLine() || count == 140) {
+                
+                if(count != 140) {
+                    List<Integer> temp = new ArrayList<>();
+                    String data = scanner.nextLine();
+                    fileMap.put(count,data);
+
+                    for(int j = 0; j < data.length(); j++) {
+                        if(data.charAt(j) != '.' && !Character.isDigit(data.charAt(j))){
+                            temp.add(j);
+                        }
+                    }
+                    symbolMap.put(count,temp);
+                }
+            
+                if(count > 0){ 
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(fileMap.get(count-1));
+                    
+                    while (matcher.find()) {
+                        String num = matcher.group();
+                        int length = num.length() + 1;
+                        int index = matcher.start();
+                        boolean found = false;
+                        for(int i = -2; i<1; i++) {
+                            if(count + i == -1 || count + i == 140) {
+                                continue;
+                            }
+                            for (Integer symbol : symbolMap.get(count + i)) {
+                                if((symbol < index + length) && (symbol > index -2)){
+                                    answer += Integer.parseInt(num);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if(found){
+                                break;
+                            }
+                        }
+                    }
+                }
+                count++;
+            }
+            scanner.close();
+
+            System.out.println("Your answer: " + answer);     
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+      }
+    }
+
+    public static void C3P2 () { //answer to challenge 3 part 2 was 82818007
+        try{
+
+            Integer answer = 0;
+            File file = new File("C3file.txt");
+            Scanner scanner = new Scanner(file);
+            Map<Integer, String> fileMap = new HashMap<>();
+            Map<Integer, List<Pair<Integer, String>>> pairMap = new HashMap<>();
+            int count = 0;
+
+            while (scanner.hasNextLine() || count == 140) {
+                
+                if(count != 140) {
+                    List<Pair<Integer, String>> temp = new ArrayList<>();
+                    String data = scanner.nextLine();
+                    fileMap.put(count,data);
+                    Pattern pattern1 = Pattern.compile("\\d+");
+                    Matcher matcher1 = pattern1.matcher(data);
+
+                    while(matcher1.find()){
+                        String num = matcher1.group();
+                        int index = matcher1.start();
+                        
+                        temp.add(Pair.with(index,num));
+                    }
+                    pairMap.put(count,temp);
+                }
+            
+                if(count > 0){ 
+                    Pattern pattern = Pattern.compile("\\*");
+                    Matcher matcher = pattern.matcher(fileMap.get(count-1)); 
+
+                    while (matcher.find()) {
+                        int index = matcher.start();
+                        boolean found1 = false;
+                        boolean found2 = false;
+                        String num1 = "";
+                        for(int i = -2; i<1; i++) {
+                            if(count + i == -1 || count + i == 140) {
+                                continue;
+                            }
+                            for (Pair pair : pairMap.get(count + i)) {
+                                Integer nLength = ((String) pair.getValue1()).length();
+                                Integer nIndex = (Integer) pair.getValue0();
+                                for(int k = 0; k < nLength; k++) {
+                                    if((nIndex + k < index + 2) && (nIndex + k > index - 2) && !found1){
+                                        found1 = true;
+                                        num1 = (String) pair.getValue1();
+                                        break;
+                                    }
+                                    
+                                    if((nIndex + k < index + 2) && (nIndex + k > index - 2) && found1 && !found2){
+                                        answer += Integer.parseInt(num1) * Integer.parseInt(((String) pair.getValue1()));
+                                        found2 = true;
+                                        break;
+                                    }
+                                }
+                                if(found2){
+                                    break;
+                                }
+                            }
+                            if(found2) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                count++;
+            }
+            scanner.close();
+
+            System.out.println("Your answer: " + answer);     
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
