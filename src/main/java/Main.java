@@ -16,6 +16,7 @@ public class Main {
             System.out.println("1. C1");
             System.out.println("2. C2");
             System.out.println("3. C3");
+            System.out.println("4. C4");
             System.out.println("42. Exit");
             System.out.print("Enter your choice: ");
 
@@ -42,7 +43,7 @@ public class Main {
                         C2P2();
                     }
                     break;
-                    case 3:
+                case 3:
                     System.out.println("1. P1");
                     System.out.println("2. P2");
                     choice2 = scanner.nextInt();
@@ -50,6 +51,16 @@ public class Main {
                         C3P1();  
                     } else if (choice2 ==2) {
                         C3P2();
+                    }
+                    break;
+                case 4:
+                    System.out.println("1. P1");
+                    System.out.println("2. P2");
+                    choice2 = scanner.nextInt();
+                    if(choice2 == 1) {
+                        C4P1();  
+                    } else if (choice2 ==2) {
+                        C4P2();
                     }
                     break;
                 case 42:
@@ -380,6 +391,112 @@ public class Main {
             }
             scanner.close();
 
+            System.out.println("Your answer: " + answer);     
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+      }
+    }
+
+    public static void C4P1 () { //answer to challenge 4 part 1 was 24733
+        try{
+
+            Integer answer = 0;
+            File file = new File("C4file.txt");
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                Integer sum = 0;
+                String data = scanner.nextLine();
+                String[] fstSplit = data.split(":");
+                String[] sndSplit = fstSplit[1].split("\\|");
+                List<List<String>> numsList = new ArrayList<>();
+                    
+                for(int i = 0; i < 2; i++) {
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(sndSplit[i]);
+                    List<String> temp = new ArrayList<>();
+                    
+                    while (matcher.find()) {
+                        String num = matcher.group();                        
+                        temp.add(num);
+                    }
+                    numsList.add(temp);
+                }
+
+                for(String elem : numsList.get(0)){
+                    for(String elem2 : numsList.get(1)){
+                        if(Integer.parseInt(elem) == Integer.parseInt(elem2)){
+                            if(sum == 0){
+                                sum += 1;
+                            } else {
+                                sum = sum * 2;
+                            }
+                            break;
+                        }
+                    }
+                }
+                answer += sum;
+            }
+            scanner.close();
+            System.out.println("Your answer: " + answer);     
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+      }
+    }
+
+    public static void C4P2 () { //answer to challenge 4 part 2 was 5422730
+        try{
+            Integer answer = 0;
+            File file = new File("C4file.txt");
+            Scanner scanner = new Scanner(file);
+            Integer count = 1;
+            Map<Integer, Integer> cardMap = new HashMap<>();
+            
+            for (int i = 1; i <= 202; i++) {
+                cardMap.put(i, 1);
+            }
+
+            while (scanner.hasNextLine()) {
+                Integer sum = 0;
+                String data = scanner.nextLine();
+                String[] fstSplit = data.split(":");
+                String[] sndSplit = fstSplit[1].split("\\|");
+                List<List<String>> numsList = new ArrayList<>();
+                    
+                for(int i = 0; i < 2; i++) {
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(sndSplit[i]);
+                    List<String> temp = new ArrayList<>();
+                    
+                    while (matcher.find()) {
+                        String num = matcher.group();                        
+                        temp.add(num);
+                    }
+                    numsList.add(temp);
+                }
+
+                for(String elem : numsList.get(0)){
+                    for(String elem2 : numsList.get(1)){
+                        if(Integer.parseInt(elem) == Integer.parseInt(elem2)){
+                                sum += 1;
+                            break;
+                        }
+                    }
+                }
+
+                for(int j = 1; j <= cardMap.get(count); j++) {
+                    for(int i = 1; i <= sum; i++) {
+                            cardMap.put(count + i, cardMap.get(count + i) + 1);
+                    }
+                }
+
+                answer += cardMap.get(count);
+                count++;
+            }
+
+            scanner.close();
             System.out.println("Your answer: " + answer);     
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
