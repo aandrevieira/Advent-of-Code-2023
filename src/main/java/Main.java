@@ -17,6 +17,7 @@ public class Main {
             System.out.println("2. C2");
             System.out.println("3. C3");
             System.out.println("4. C4");
+            System.out.println("5. C5");
             System.out.println("42. Exit");
             System.out.print("Enter your choice: ");
 
@@ -61,6 +62,16 @@ public class Main {
                         C4P1();  
                     } else if (choice2 ==2) {
                         C4P2();
+                    }
+                    break;
+                case 5:
+                    System.out.println("1. P1");
+                    System.out.println("2. P2");
+                    choice2 = scanner.nextInt();
+                    if(choice2 == 1) {
+                        C5P1();  
+                    } else if (choice2 ==2) {
+                        //C5P2();
                     }
                     break;
                 case 42:
@@ -497,6 +508,124 @@ public class Main {
             }
 
             scanner.close();
+            System.out.println("Your answer: " + answer);     
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+      }
+    }
+
+    public static void C5P1 () { //answer to challenge 5 part 1 was 382895070
+        try{
+            long answer = Long.MAX_VALUE;
+            File file = new File("C5file.txt");
+            Scanner scanner = new Scanner(file);
+            boolean firstLine = true;
+            Map<String, Pair<String, Boolean>> numsMap = new HashMap <>();    
+
+            while (scanner.hasNextLine()) {
+                String data = scanner.nextLine();  
+                List<String> numsTemp = new ArrayList<>();
+                Pattern pattern = Pattern.compile("\\d+");
+                Matcher matcher = pattern.matcher(data);
+
+                while(matcher.find()) {
+                    numsTemp.add(matcher.group());
+                }
+
+                if(firstLine){
+                    for(String num : numsTemp) {
+                        numsMap.put(num,Pair.with(num,false));
+                    }
+                    firstLine = false;
+                } else {
+                    if(data.equals("")){
+                        continue;
+                    } else if(data.contains(":")) {
+                        for(String key : numsMap.keySet()) {
+                            numsMap.put(key,Pair.with(numsMap.get(key).getValue0(),false));
+                        }
+                    } else {
+                        for(String key : numsMap.keySet()) {
+                            long nKey = Long.parseLong(numsMap.get(key).getValue0());
+                            long n0 = Long.parseLong(numsTemp.get(0));
+                            long n1 = Long.parseLong(numsTemp.get(1));
+                            long n2 = Long.parseLong(numsTemp.get(2));
+
+                            if(!numsMap.get(key).getValue1() && nKey <= (n1 + n2) && nKey >= n1){
+                                String fnum = String.valueOf(n0 + nKey - n1); 
+                                numsMap.put(key, Pair.with(fnum,true));
+                            }
+                        }
+                    }
+                }
+            }
+            scanner.close();
+
+            for(String key : numsMap.keySet()) {
+                if(Long.parseLong(numsMap.get(key).getValue0()) < answer){
+                    answer = Long.parseLong(numsMap.get(key).getValue0());
+                }
+            }
+            System.out.println("Your answer: " + answer);     
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+      }
+    }
+
+    public static void C5P2 () { //answer to challenge 5 part 1 was 382895070
+        try{
+            long answer = Long.MAX_VALUE;
+            File file = new File("C5file.txt");
+            Scanner scanner = new Scanner(file);
+            boolean firstLine = true;
+            Map<String, Pair<String, Boolean>> numsMap = new HashMap <>();    
+
+            while (scanner.hasNextLine()) {
+                String data = scanner.nextLine();  
+                List<String> numsTemp = new ArrayList<>();
+                Pattern pattern = Pattern.compile("\\d+");
+                Matcher matcher = pattern.matcher(data);
+
+                while(matcher.find()) {
+                    numsTemp.add(matcher.group());
+                }
+
+                if(firstLine){
+                    for(String num : numsTemp) {
+                        numsMap.put(num,Pair.with(num,false));
+                    }
+                    firstLine = false;
+                } else {
+                    if(data.equals("")){
+                        continue;
+                    } else if(data.contains(":")) {
+                        for(String key : numsMap.keySet()) {
+                            numsMap.put(key,Pair.with(numsMap.get(key).getValue0(),false));
+                        }
+                    } else {
+                        for(String key : numsMap.keySet()) {
+                            long nKey = Long.parseLong(numsMap.get(key).getValue0());
+                            long n0 = Long.parseLong(numsTemp.get(0));
+                            long n1 = Long.parseLong(numsTemp.get(1));
+                            long n2 = Long.parseLong(numsTemp.get(2));
+
+                            if(!numsMap.get(key).getValue1() && nKey <= (n1 + n2) && nKey >= n1){
+                                String fnum = String.valueOf(n0 + nKey - n1); 
+                                numsMap.put(key, Pair.with(fnum,true));
+                            }
+                        }
+                    }
+                }
+            }
+            scanner.close();
+
+            for(String key : numsMap.keySet()) {
+                if(Long.parseLong(numsMap.get(key).getValue0()) < answer){
+                    answer = Long.parseLong(numsMap.get(key).getValue0());
+                }
+            }
             System.out.println("Your answer: " + answer);     
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
